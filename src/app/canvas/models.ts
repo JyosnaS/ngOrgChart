@@ -15,10 +15,10 @@ export class Coords {
     setY(y: number) {
         this.y = y;
     }
-    getTopConnector(): any {
+    getLeftConnector(): any {
         return {
-            x: this.x + this.width / 2,
-            y: this.y
+            x: this.x,
+            y: this.y + this.height / 2
         };
     }
 
@@ -35,10 +35,10 @@ export class Node {
         this.coord = new Coords(0, 0, Node.NODE_WIDTH, Node.NODE_HEIGHT);
         this.children = children;
     }
-    static H_GAP = 50;
-    static V_GAP = 30;
-    static NODE_WIDTH = 150;
-    static NODE_HEIGHT = 100;
+    static H_GAP = 20;
+    static V_GAP = 20;
+    static NODE_WIDTH = 100;
+    static NODE_HEIGHT = 50;
     static LINE_COLOR = '#3f3f3f';
     coord: Coords;
     parent: Node;
@@ -48,7 +48,7 @@ export class Node {
     calculateLines() {
         if (this.parent) {
             const pMidCoords = this.parent.coord.getBottomConnector();
-            const selfMidCoods = this.coord.getTopConnector();
+            const selfMidCoods = this.coord.getLeftConnector();
             const midY = pMidCoords.y + (selfMidCoods.y - pMidCoords.y) / 2;
             this.lines = [];
             this.lines.push(
@@ -56,17 +56,11 @@ export class Node {
                     x1: pMidCoords.x,
                     y1: pMidCoords.y,
                     x2: pMidCoords.x,
-                    y2: midY
+                    y2: selfMidCoods.y
                 },
                 {
                     x1: pMidCoords.x,
-                    y1: midY,
-                    x2: selfMidCoods.x,
-                    y2: midY
-                },
-                {
-                    x1: selfMidCoods.x,
-                    y1: midY,
+                    y1: selfMidCoods.y,
                     x2: selfMidCoods.x,
                     y2: selfMidCoods.y
                 }
