@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Coords } from '../models';
+import { Node } from '../models';
 
 @Component({
   selector: '[app-item-card]',
@@ -8,13 +8,17 @@ import { Coords } from '../models';
 })
 export class ItemCardComponent implements OnInit {
 
-  @Input() coord: Coords;
+  @Input() node: Node;
 
-  
+  hasParent: boolean;
+
   constructor() { }
 
   ngOnInit() {
-
+    if (this.node.parent) {
+      this.node.calculateLines();
+      this.hasParent = true;
+    }
   }
 
 

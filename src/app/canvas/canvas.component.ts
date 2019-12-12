@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Coords } from './models';
+import { Coords, Node } from './models';
 
 @Component({
   selector: 'app-canvas',
@@ -8,39 +8,42 @@ import { Coords } from './models';
 })
 export class CanvasComponent implements OnInit {
 
-  data = [
-    {
-      name: "Root",
-      children: [
-        {
-          name: "child left"
-        },
-        {
-          name: "child right"
-        }
-      ]
-    }
-  ];
+  data: Node = new Node('root', [
+    new Node('left', [
+      new Node('Left 1'),
+      new Node('Right 1')
+    ]),
+    new Node('mid'),
+    new Node('right', [
+      new Node('Left 1'),
+      new Node('Left 1'),
+      new Node('Right 1')
+    ])
+  ]);
 
-  tempCords=[
-    new Coords(50,50,150,100),
-    new Coords(350,50,150,100)
-  ]
 
   constructor() { }
 
   ngOnInit() {
+    this.calculateMesurement(this.data, 10, 0);
   }
 
-  calculateMesurement(node): number {
-    let total = 0;
+  calculateMesurement(node: Node, prevStart: number, level: number): number {
+    let myEnd = prevStart;
+    let myStart = prevStart;
     if (node.children) {
+
       node.children.forEach(subNode => {
-        total += this.calculateMesurement(subNode);
+        subNode.parent = node;
+        myEnd = this.calculateMesurement(subNode, myEnd, level + 1);
       });
+      myStart = (((myEnd - prevStart) / 2) - (Node.NODE_WIDTH + Node.H_GAP) / 2) + prevStart;
     } else {
-      total = 150 + 20 + 20;
+      myEnd = prevStart + Node.NODE_WIDTH + Node.H_GAP;
     }
-    return total;
+
+    node.coord.setX(myStart);
+    node.coord.setY(level * (Node.NODE_HEIGHT + Node.V_GAP));
+    return myEnd;
   }
 }

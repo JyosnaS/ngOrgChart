@@ -1,1 +1,11 @@
-<svg:rect xmlns="http://www.w3.org/2000/svg" [attr.x]="coord.x" [attr.y]="coord.y" [attr.width]="coord.width" [attr.height]="coord.height" style="fill: none; stroke:olive; stroke-width: 1;"></svg:rect>
+<svg:g>
+    <svg:rect xmlns="http://www.w3.org/2000/svg" [attr.x]="node.coord.x" [attr.y]="node.coord.y"
+        [attr.width]="node.coord.width" [attr.height]="node.coord.height"
+        style="fill: none; stroke:olive; stroke-width: 1;"></svg:rect>
+    <svg:text [attr.x]="node.coord.x+20" [attr.y]="node.coord.y+20">{{node.name}}</svg:text>
+    <svg:g *ngFor="let n of node.children" app-item-card [node]="n" />
+    <svg:g *ngIf="hasParent">
+        <svg:line *ngFor="let l of node.lines" [attr.x1]="l.x1" [attr.y1]="l.y1" 
+        [attr.x2]="l.x2" [attr.y2]="l.y2" style="stroke:#3f3f3f;stroke-width:2"/>
+    </svg:g>
+</svg:g>
