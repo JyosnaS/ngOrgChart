@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Node } from '../models';
+import { Node } from '../node.model';
+import { UserData } from 'src/app/data.model';
 
 @Component({
   selector: '[app-item-card]',
@@ -8,19 +9,20 @@ import { Node } from '../models';
 })
 export class ItemCardComponent implements OnInit {
 
-  @Input() node: Node;
+  @Input() node: Node<UserData>;
 
   hasParent: boolean;
 
   constructor() { }
 
+  onCardClick(event) {
+    this.node.toggleExpand();
+  }
+
   ngOnInit() {
+    this.node.calcLines();
     if (this.node.parent) {
-      this.node.calculateLines();
       this.hasParent = true;
     }
   }
-
-
-
 }

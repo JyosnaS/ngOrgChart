@@ -1,11 +1,65 @@
 <svg:g>
-    <svg:rect xmlns="http://www.w3.org/2000/svg" [attr.x]="node.coord.x" [attr.y]="node.coord.y"
-        [attr.width]="node.coord.width" [attr.height]="node.coord.height"
-        style="fill: none; stroke:olive; stroke-width: 1;"></svg:rect>
-    <svg:text [attr.x]="node.coord.x+20" [attr.y]="node.coord.y+20">{{node.name}}</svg:text>
-    <svg:g *ngFor="let n of node.children" app-item-card [node]="n" />
+
+
+
+    <svg:rect  xmlns="http://www.w3.org/2000/svg" [attr.x]="node.dim.x"
+        [attr.y]="node.dim.y" [attr.width]="node.dim.width" [attr.height]="node.dim.height" filter="url(#f4)" rx="10"
+        ry="10" style="fill: #fff; stroke:olive; stroke-width: 0;"></svg:rect>
+
+    <!-- <svg:image
+        [attr.href]="'https://ui-avatars.com/api/?background=0000a3&color=ffffff&rounded=true&name='+node.data.name"
+        [attr.x]="node.dim.x+10" [attr.y]="node.dim.y+10" width="25" height="25" /> -->
+
+    <svg:image *ngIf="node.data.gender=='M' && !node.data.baby" href="assets/boy.png" [attr.x]="node.dim.x+10"
+        [attr.y]="node.dim.y+10" width="25" height="25" />
+
+    <svg:image *ngIf="node.data.gender=='F' && !node.data.baby" href="assets/girl.png" [attr.x]="node.dim.x+10"
+        [attr.y]="node.dim.y+10" width="25" height="25" />
+
+    <svg:image *ngIf="node.data.gender=='M' && node.data.baby" href="assets/baby-boy.png" [attr.x]="node.dim.x+10"
+        [attr.y]="node.dim.y+10" width="25" height="25" />
+
+    <svg:image *ngIf="node.data.gender=='F' && node.data.baby" href="assets/baby-girl.png" [attr.x]="node.dim.x+10"
+        [attr.y]="node.dim.y+10" width="25" height="25" />
+
+    <svg:image *ngIf="node.data.spouse" href="assets/spouse.png" [attr.x]="node.dim.x+10" [attr.y]="node.dim.y+40"
+        width="25" height="25" />
+
+    <svg:image *ngIf="node.children && node.children.length" href="assets/kids.png" [attr.x]="node.dim.x+10"
+        [attr.y]="node.dim.y+70" width="25" height="25" />
+
+    <svg:image (click)="onCardClick($event)" style="cursor:pointer" *ngIf="node.children && node.children.length && !node.isExpand" href="assets/plus.png"
+        [attr.x]="node.dim.x+node.dim.width-25" [attr.y]="node.dim.y+75" width="16" height="16" />
+    <svg:image (click)="onCardClick($event)" style="cursor:pointer" *ngIf="node.children && node.children.length && node.isExpand" href="assets/minus.png"
+        [attr.x]="node.dim.x+node.dim.width-25" [attr.y]="node.dim.y+75" width="16" height="16" />
+
+
+
+    <svg:text [attr.x]="node.dim.x+40" style="font-size: smaller;" [attr.y]="node.dim.y+28">{{node.data}}</svg:text>
+
+    <svg:text [attr.x]="node.dim.x+40" style="font-size: smaller;" [attr.y]="node.dim.y+58">{{node.data.spouse}}
+    </svg:text>
+
+    <svg:text *ngIf="node.children && node.children.length" [attr.x]="node.dim.x+40" style="font-size: smaller;"
+        [attr.y]="node.dim.y+88">{{node.children.length}}
+    </svg:text>
+    <!-- <svg:text *ngIf="node.expand" [attr.x]="node.dim.x+10" [attr.y]="node.dim.y+20">{{node.data}}</svg:text> -->
+
+
+
+    <!-- <g xmlns="http://www.w3.org/2000/svg" transform="scale(0.05)">
+		<path d="M199.995,0C89.716,0,0,89.72,0,200c0,110.279,89.716,200,199.995,200C310.277,400,400,310.279,400,200    C400,89.72,310.277,0,199.995,0z M199.995,373.77C104.182,373.77,26.23,295.816,26.23,200c0-95.817,77.951-173.77,173.765-173.77    c95.817,0,173.772,77.953,173.772,173.77C373.769,295.816,295.812,373.77,199.995,373.77z"/>
+		<path d="M279.478,186.884h-66.363V120.52c0-7.243-5.872-13.115-13.115-13.115s-13.115,5.873-13.115,13.115v66.368h-66.361    c-7.242,0-13.115,5.873-13.115,13.115c0,7.243,5.873,13.115,13.115,13.115h66.358v66.362c0,7.242,5.872,13.114,13.115,13.114    c7.242,0,13.115-5.872,13.115-13.114v-66.365h66.367c7.241,0,13.114-5.873,13.114-13.115    C292.593,192.757,286.72,186.884,279.478,186.884z"/>
+	</g> -->
+
+
+
+    <svg:g *ngIf="node.isExpand">
+        <svg:g *ngFor="let n of node.children" app-item-card [node]="n" />
+    </svg:g>
+
     <svg:g *ngIf="hasParent">
-        <svg:line *ngFor="let l of node.lines" [attr.x1]="l.x1" [attr.y1]="l.y1" 
-        [attr.x2]="l.x2" [attr.y2]="l.y2" style="stroke:#3f3f3f;stroke-width:2"/>
+        <svg:line *ngFor="let l of node.lines" [attr.x1]="l.x1" [attr.y1]="l.y1" [attr.x2]="l.x2" [attr.y2]="l.y2"
+            style="stroke:#3f3f3f;stroke-width:1" />
     </svg:g>
 </svg:g>
